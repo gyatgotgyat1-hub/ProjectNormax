@@ -1,8 +1,11 @@
 const MODELS = {
   fast: "llama-3.1-8b-instant",
-  balanced: "llama-3.3-70b-versatile",
-  quality: "llama-3.3-70b-versatile",
+  balanced: "openai/gpt-oss-20b",
+  quality: "openai/gpt-oss-120b",
 };
+
+const VISION_MODEL = "meta-llama/llama-4-scout-17b-16e-instruct";
+const FALLBACK_MODEL = "llama-3.1-8b-instant";
 
 const MAX_TOKENS = {
   fast: 512,
@@ -31,6 +34,30 @@ function buildGroqMessages(messages) {
   });
 }
 
+function isModelAccessError(data) {
+  const msg = (data?.error?.message || data?.message || "").toLowerCase();
+  return msg.includes("does not exist") || msg.includes("do not have access");
+}
+
+async function callGroq(apiKey, { model, groqMessages, speedKey }) {
+  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiKey}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model,
+      messages: groqMessages,
+      temperature: speedKey === "quality" ? 0.5 : 0.7,
+      max_tokens: MAX_TOKENS[speedKey] || 1024,
+    }),
+  });
+
+  const data = await response.json();
+  return { response, data };
+}
+
 export default async function handler(req, res) {
   if (req.method !== "POST") {
     res.setHeader("Allow", "POST");
@@ -51,10 +78,7 @@ export default async function handler(req, res) {
 
   const hasImage = messages.some((m) => m.image?.base64);
   const speedKey = MODELS[speed] ? speed : "balanced";
-  let model = MODELS[speedKey];
-  if (hasImage) {
-    model = "llama-3.2-11b-vision-preview";
-  }
+  let model = hasImage ? VISION_MODEL : MODELS[speedKey];
 
   const groqMessages = [
     {
@@ -66,21 +90,12 @@ export default async function handler(req, res) {
   ];
 
   try {
-    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${apiKey}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        model,
-        messages: groqMessages,
-        temperature: speedKey === "quality" ? 0.5 : 0.7,
-        max_tokens: MAX_TOKENS[speedKey] || 1024,
-      }),
-    });
+    let { response, data } = await callGroq(apiKey, { model, groqMessages, speedKey });
 
-    const data = await response.json();
+    if (!response.ok && isModelAccessError(data) && model !== FALLBACK_MODEL) {
+      model = FALLBACK_MODEL;
+      ({ response, data } = await callGroq(apiKey, { model, groqMessages, speedKey }));
+    }
 
     if (!response.ok) {
       const errMsg =

@@ -12,7 +12,7 @@ const PROMOS = {
 };
 
 const DEFAULT_SETTINGS = {
-  mode: "dark",
+  mode: "light",
   style: "normax",
   speed: "balanced",
 };
@@ -144,7 +144,7 @@ function redeemPromo(rawCode) {
     redeemed[code] = Date.now();
     saveJson(STORAGE.redeemed, redeemed);
     updateUsageBadge();
-    return { ok: true, message: "Access upgraded." };
+    return { ok: true, message: "" };
   }
 
   const promo = PROMOS[normalized];
@@ -324,6 +324,12 @@ function initComposer() {
   });
 
   els.chatForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    sendChat();
+  });
+
+  els.messageInput.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter" || e.shiftKey) return;
     e.preventDefault();
     sendChat();
   });

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="dark" data-style="normax">
+<html lang="en" data-theme="light" data-style="normax">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -44,7 +44,6 @@
       <section id="panel-promo" class="panel" role="tabpanel" aria-labelledby="tab-promo" hidden>
         <div class="promo-card">
           <h2>Redeem a code</h2>
-          <p class="muted">Enter a promo code to unlock chat time. Codes add to your remaining balance.</p>
           <form id="promoForm" class="promo-form">
             <input type="text" id="promoInput" placeholder="Enter code" autocomplete="off" spellcheck="false" />
             <button type="submit">Apply</button>
@@ -61,8 +60,8 @@
           <label class="setting">
             <span>Appearance</span>
             <select id="modeSelect">
+              <option value="light" selected>Light</option>
               <option value="dark">Dark</option>
-              <option value="light">Light</option>
             </select>
           </label>
           <label class="setting">
@@ -84,7 +83,6 @@
           </label>
           <button type="button" class="ghost-btn" id="clearChatBtn">Clear chat history</button>
         </div>
-        <p class="muted settings-note">Deploy on Vercel with <code>GROQ_API_KEY</code> set in project environment variables (free at console.groq.com).</p>
       </section>
     </main>
   </div>
