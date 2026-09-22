@@ -2,9 +2,12 @@ const STORAGE = {
   usageExpires: "normax_usage_expires",
   infinite: "normax_infinite",
   redeemed: "normax_redeemed_codes",
+  starter: "normax_starter_granted",
   settings: "normax_settings",
   messages: "normax_messages",
 };
+
+const STARTER_MINUTES = 45;
 
 const PROMOS = {
   promo10: { minutes: 30, label: "30 minutes added" },
@@ -57,7 +60,7 @@ function loadMessages() {
   return loadJson(STORAGE.messages, [
     {
       role: "assistant",
-      content: "Welcome to ProjectNormax. Redeem a promo code to start chatting, or enter a code you already have.",
+      content: "Welcome to ProjectNormax. Ask anything — you get free starter time, and promo codes add more.",
     },
   ]);
 }
@@ -152,10 +155,6 @@ function redeemPromo(rawCode) {
     return { ok: false, message: "Invalid or unknown code." };
   }
 
-  if (redeemed[normalized]) {
-    return { ok: false, message: "This code was already used on this device." };
-  }
-
   redeemed[normalized] = Date.now();
   saveJson(STORAGE.redeemed, redeemed);
   addUsageMinutes(promo.minutes);
@@ -225,7 +224,7 @@ async function sendChat() {
   if (!hasAccess()) {
     appendMessage({
       role: "system",
-      content: "Chat is locked until you redeem a promo code (Promo Codes tab).",
+      content: "Your chat time ran out. Add a promo code on the Promo Codes tab to keep going.",
     });
     return;
   }
@@ -284,7 +283,7 @@ async function sendChat() {
   } catch (err) {
     appendMessage({
       role: "system",
-      content: err.message || "Something went wrong. Check your API key on Vercel.",
+      content: err.message || "Something went wrong. Check POLLINATIONS_API_KEY on Vercel.",
     });
   } finally {
     els.sendBtn.disabled = false;
@@ -364,10 +363,19 @@ function initSettings() {
   });
 }
 
+function grantStarterTime() {
+  if (localStorage.getItem(STORAGE.starter) === "1") return;
+  if (!isInfinite() && getUsageExpires() <= Date.now()) {
+    addUsageMinutes(STARTER_MINUTES);
+  }
+  localStorage.setItem(STORAGE.starter, "1");
+}
+
 initTabs();
 initComposer();
 initPromo();
 initSettings();
+grantStarterTime();
 renderMessages();
 updateUsageBadge();
 

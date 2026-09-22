@@ -1,10 +1,8 @@
 # ProjectNormax
 
-Single-page chat app with promo-based usage, themes, and a Vercel serverless backend powered by [Groq](https://console.groq.com) (free tier, OpenAI-compatible API).
+Single-page chat app with promo-based usage, themes, and a Vercel serverless backend using [Pollinations](https://enter.pollinations.ai) (OpenAI-compatible, free API key).
 
 ## Local preview
-
-Static files work locally; chat requires the API route (use Vercel CLI):
 
 ```bash
 npm i -g vercel
@@ -12,26 +10,27 @@ cd C:\Users\Maddox\Downloads\ProjectNormax
 vercel dev
 ```
 
-Set `GROQ_API_KEY` in `.env.local` when prompted or in the Vercel dashboard.
+Set `POLLINATIONS_API_KEY` in `.env.local` when prompted.
 
 ## Deploy to Vercel
 
-1. Push this folder to GitHub (or import the folder in [vercel.com/new](https://vercel.com/new)).
-2. In **Project → Settings → Environment Variables**, add:
-   - `GROQ_API_KEY` — create a free key at [console.groq.com](https://console.groq.com).
-3. Deploy. The `/api/chat` route runs as a serverless function.
+1. Push to GitHub and import on [vercel.com/new](https://vercel.com/new).
+2. **Settings → Environment Variables** → add `POLLINATIONS_API_KEY` from [enter.pollinations.ai/keys](https://enter.pollinations.ai/keys).
+3. Redeploy after adding the variable.
+
+You can also name the variable `AI_API_KEY` if you prefer.
 
 ## Promo codes (public)
 
-| Code       | Benefit        |
-| ---------- | -------------- |
-| `Promo10`  | 30 minutes     |
-| `Free100`  | 2 hours        |
+| Code       | Benefit    |
+| ---------- | ---------- |
+| `Promo10`  | 30 minutes |
+| `Free100`  | 2 hours    |
 
-Each public code can be redeemed once per browser (stored in `localStorage`).
+Codes can be applied multiple times; each use adds time. New visitors get **45 minutes** of starter chat time.
 
 ## Settings
 
-- **Light / dark** appearance
-- **Style** presets: Normax, Ocean, Sunset, Mono
-- **Speed**: maps to Groq models and token limits (Fast / Balanced / Quality)
+- Light / dark appearance
+- Style presets: Normax, Ocean, Sunset, Mono
+- Speed: Fast / Balanced / Quality (Pollinations model + token limits)
