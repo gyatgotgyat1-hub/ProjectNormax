@@ -1,0 +1,7 @@
+{
+  "name": "project-normax",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "ProjectNormax — chat UI with promo usage and Vercel-hosted Groq API"
+}

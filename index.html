@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-style="normax">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ProjectNormax</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="header">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <h1>ProjectNormax</h1>
+      </div>
+      <p class="usage-badge" id="usageBadge" aria-live="polite">Loading usage…</p>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="Main sections">
+      <button type="button" class="tab active" role="tab" aria-selected="true" aria-controls="panel-chat" id="tab-chat" data-tab="chat">Chat</button>
+      <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="panel-promo" id="tab-promo" data-tab="promo">Promo Codes</button>
+      <button type="button" class="tab" role="tab" aria-selected="false" aria-controls="panel-settings" id="tab-settings" data-tab="settings">Settings</button>
+    </nav>
+
+    <main class="panels">
+      <section id="panel-chat" class="panel active" role="tabpanel" aria-labelledby="tab-chat">
+        <div class="chat-log" id="chatLog" aria-live="polite"></div>
+        <form class="composer" id="chatForm">
+          <input type="file" id="imageInput" accept="image/*" hidden />
+          <button type="button" class="icon-btn" id="attachBtn" title="Attach image" aria-label="Attach image">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+          </button>
+          <div class="composer-field">
+            <textarea id="messageInput" rows="1" placeholder="Message ProjectNormax…" autocomplete="off"></textarea>
+            <div class="attachment-preview hidden" id="attachmentPreview"></div>
+          </div>
+          <button type="submit" class="send-btn" id="sendBtn">Send</button>
+        </form>
+      </section>
+
+      <section id="panel-promo" class="panel" role="tabpanel" aria-labelledby="tab-promo" hidden>
+        <div class="promo-card">
+          <h2>Redeem a code</h2>
+          <p class="muted">Enter a promo code to unlock chat time. Codes add to your remaining balance.</p>
+          <form id="promoForm" class="promo-form">
+            <input type="text" id="promoInput" placeholder="Enter code" autocomplete="off" spellcheck="false" />
+            <button type="submit">Apply</button>
+          </form>
+          <p class="promo-result" id="promoResult" role="status"></p>
+          <ul class="promo-hints muted">
+            <li>Try community codes like <code>Promo10</code> or <code>Free100</code>.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section id="panel-settings" class="panel" role="tabpanel" aria-labelledby="tab-settings" hidden>
+        <div class="settings-grid">
+          <label class="setting">
+            <span>Appearance</span>
+            <select id="modeSelect">
+              <option value="dark">Dark</option>
+              <option value="light">Light</option>
+            </select>
+          </label>
+          <label class="setting">
+            <span>Style / theme</span>
+            <select id="styleSelect">
+              <option value="normax">Normax (default)</option>
+              <option value="ocean">Ocean</option>
+              <option value="sunset">Sunset</option>
+              <option value="mono">Mono</option>
+            </select>
+          </label>
+          <label class="setting">
+            <span>Response speed</span>
+            <select id="speedSelect">
+              <option value="fast">Fast</option>
+              <option value="balanced" selected>Balanced</option>
+              <option value="quality">Quality (slower)</option>
+            </select>
+          </label>
+          <button type="button" class="ghost-btn" id="clearChatBtn">Clear chat history</button>
+        </div>
+        <p class="muted settings-note">Deploy on Vercel with <code>GROQ_API_KEY</code> set in project environment variables (free at console.groq.com).</p>
+      </section>
+    </main>
+  </div>
+  <script src="js/app.js" type="module"></script>
+</body>
+</html>
